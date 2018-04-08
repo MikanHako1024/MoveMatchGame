@@ -42,6 +42,9 @@ void Print(int num)
 	printf("\n"); 
 }
 
+//void PrintStr(
+
+
 // 录字模 
 int __ScanZM()
 {
@@ -139,6 +142,7 @@ int OPE[4][10][4]={
 #define NUM(i) (OPE[ope[i]][n[i]][z[i]])
 
 
+/*
 // 十以内的两个数的加 _ 对数字减增 ('+')
 void _f1_1(int a, int b, int c) 
 {
@@ -256,7 +260,110 @@ void _f2_2(int a, int b, int c)
 
 // 待 兼容合并
 
-// ？待 优化函数名 变量名 等 
+// 待 优化函数名 变量名 等 
+*/
+
+
+void _f(int a, int mod, int b, int c, int opemod) // a mod b = c 数字修改方式opemod (mod是改后或不改的符号)
+{
+	int n[3]={a, b, c}; // a b c
+	int ope[3]; // opea opeb opec
+	int z[3]; // za zb zc
+	int t;
+	
+    if( opemod<0 || opemod>4 )
+    { return -1; }
+    else if( opemod==4 ) // 两数字-+
+    {
+    
+	    // 一ope0 一ope1 一ope2
+	    FOR_OPE(0)
+		{
+			FOR_OPE(1)
+			{
+				if( ope[1]==ope[0] )continue;
+				FOR_OPE(2)
+				{
+					if( ope[2]==ope[0] )continue;
+					if( ope[2]==ope[1] )continue;
+					
+					FOR_Z(0)FOR_Z(1)FOR_Z(2)
+					    // ？
+					    // ？改 if 为 三目运算
+					    // ？...
+						if( NUM(0)+((mod==2)?(-1):(1))*NUM(1)==NUM(2) )
+							printf("%d %c %d = %d \n", NUM(0), (mod==2)?('-'):('+'), NUM(1), NUM(2));
+				}
+			}
+		}
+        
+    }
+    else if( opemod==3 ) // 一数字-+
+    {
+        
+	    // 两ope2 一ope3
+		for(t=0; t<3; t++)
+		{
+		    // ？
+		    // ？两ope2 一ope3 即 一ope3 其他ope2
+			ope[0]=2; ope[1]=2; ope[2]=2;
+			ope[t]=3; // ope3
+			
+			FOR_Z(0)FOR_Z(1)FOR_Z(2)
+				if( NUM(0)+((mod==2)?(-1):(1))*NUM(1)==NUM(2) )
+							printf("%d %c %d = %d \n", NUM(0), (mod==2)?('-'):('+'), NUM(1), NUM(2));
+		}
+        
+    }
+    else if( opemod==0 ) // 一数字-
+    {
+        
+	    // 两ope2 一ope1
+		for(t=0; t<3; t++)
+		{
+		    // ？
+		    // ？两ope2 一ope3 即 一ope3 其他ope2
+			ope[0]=2; ope[1]=2; ope[2]=2;
+			ope[t]=0; // ope0
+			
+			FOR_Z(0)FOR_Z(1)FOR_Z(2)
+				if( NUM(0)+((mod==2)?(-1):(1))*NUM(1)==NUM(2) )
+							printf("%d %c %d = %d \n", NUM(0), (mod==2)?('-'):('+'), NUM(1), NUM(2));
+		}
+        
+    }
+    else if( opemod==1 ) // 一数字+
+    {
+        
+	    // 两ope2 一ope0
+		for(t=0; t<3; t++)
+		{
+		    // ？
+		    // ？两ope2 一ope3 即 一ope3 其他ope2
+			ope[0]=2; ope[1]=2; ope[2]=2;
+			ope[t]=1; // ope1
+			
+			FOR_Z(0)FOR_Z(1)FOR_Z(2)
+				if( NUM(0)+((mod==2)?(-1):(1))*NUM(1)==NUM(2) )
+							printf("%d %c %d = %d \n", NUM(0), (mod==2)?('-'):('+'), NUM(1), NUM(2));
+		}
+        
+    }
+    else if( opemod==2 ) // 数字不操作
+    {
+        
+    	// 三ope2 
+		ope[0]=2; ope[1]=2; ope[2]=2;
+			
+		FOR_Z(0)FOR_Z(1)FOR_Z(2)
+			if( NUM(0)+((mod==2)?(-1):(1))*NUM(1)==NUM(2) )
+						printf("%d %c %d = %d \n", NUM(0), (mod==2)?('-'):('+'), NUM(1), NUM(2));
+		
+    }
+    
+    
+    // 待 合并 
+}
 
 
  
@@ -264,22 +371,39 @@ void _f2_2(int a, int b, int c)
 int f(int a, int mod, int b, int c)
 {
 	printf("Question : %d %c %d = %d\n", a, (mod==1)?('+'):('-'), b, c);
-	printf("Answer :   ");
-	 
+	printf("Answer   : ");
+	
+	/*
 	if( mod==1 ) // '+'
 	{
-		_f1_1(a, b, c); // 数-+ 
-		_f2_1(a, b, c); // 数+ '+'- 
+		//_f1_1(a, b, c); // 数-+ 
+		//_f2_1(a, b, c); // 数+ '+'- 
+		
+		_f(a, mod, b, c, 4); // 两个数-+
+		_f(a, mod, b, c, 3); // 一个数-+
+		_f(a, 3-mod, b, c, 1); // 数+ '-'
 	}
 	else if( mod==2 ) // '-'
 	{
-		_f1_2(a, b, c); // 数-+ 
-		_f2_2(a, b, c); // 数- '-'+ 
+		//_f1_2(a, b, c); // 数-+ 
+		//_f2_2(a, b, c); // 数- '-'+ 
+		
+		_f(a, mod, b, c, 4); // 两个数-+
+		_f(a, mod, b, c, 3); // 一个数-+
+		_f(a, 3-mod, b, c, 0); // 数- '+'
 	}
 	else { return 0; }
+	// 待合并
+	*/
+	
+	_f(a, mod, b, c, 4); // 两个数-+
+	_f(a, mod, b, c, 3); // 一个数-+
+	_f(a, 3-mod, b, c, 2-mod); // 数- '+' / 数+ '-'
+	
 	
 	return 1; // ？待 记录答案个数 返回答案个数 
 }
+
 
 int solve(const char *str)
 {
@@ -305,7 +429,6 @@ int main()
 	*/
 	
 	
-	/* 
 	f(6, 1, 8, 8); // 6+8=8 -> 8+0=8
 	
 	f(6, 1, 0, 8); // 6+0=8 -> 8-0=8
@@ -313,7 +436,7 @@ int main()
 	f(8, 2, 9, 9); // 8-9=9 -> 0+9=9
 	
 	f(5, 1, 3, 6); // 5+3=6 -> 9-3=6
-	*/
+	
 	
 	
 	/*
@@ -366,5 +489,5 @@ int main()
 // 待 应对 等号两边均为式子 
 
 
-// 待 优化 
+// 待 再优化 
 
